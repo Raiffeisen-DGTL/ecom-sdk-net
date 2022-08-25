@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+        <FileVersion>0.1.0</FileVersion>
+        <VersionPrefix>0.1.0</VersionPrefix>
+        <PackageVersion>0.1.0</PackageVersion>
+        <VersionSuffix>release</VersionSuffix>
+        <Authors>Yaraslav &lt;yaroslav@wannabe.pro&gt;</Authors>
+        <Company>Raiffeisen JSC</Company>
+        <Product>Universal payments API SDK</Product>
+        <Description>Raiffeisen ECOM payments API opens a way to operations with invoices from your service or application. Invoice is the unique request for the payment. The user may pay the invoice with any accessible means. API supports issuing and cancelling invoices, making refunds and checking operation status.</Description>
+        <Copyright>Copyright © Raiffeisen JSC 2022</Copyright>
+        <Summary>Client SDK for Raiffeisen ECOM universal payments API</Summary>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Title>Raiffeisen ECOM SDK</Title>
+        <AssemblyTitle>Raiffeisen ECOM SDK</AssemblyTitle>
+        <AssemblyName>Raiffeisen.Ecom</AssemblyName>
+        <RootNamespace>Raiffeisen.Ecom</RootNamespace>
+        <PackageId>Raiffeisen.Ecomqiwi</PackageId>
+        <PackageTags>raiffeisen ecom sdk</PackageTags>
+        <PackageProjectUrl>https://github.com/Raiffeisen-DGTL/ecom-sdk-dotnet</PackageProjectUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/Raiffeisen-DGTL/ecom-sdk-dotnet.git</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.xml;.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Optimize>true</Optimize>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <Content Include="..\LICENSE">
+            <PackagePath />
+            <Pack>true</Pack>
+            <Link>LICENSE</Link>
+        </Content>
+        <Content Include="..\README.md">
+            <PackagePath />
+            <Pack>true</Pack>
+            <Link>README.md</Link>
+        </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+    
+</Project>

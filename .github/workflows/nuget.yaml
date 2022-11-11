@@ -15,4 +15,4 @@ jobs:
             3.1.x
             6.0.x
       - run: dotnet build -c Release ecom-dotnet-sdk.sln
-      - run: dotnet nuget push ./**/*.nupkg -k $ApiKey -s https://api.nuget.org/v3/index.json -n true
+      - run: dotnet nuget push ./**/*.nupkg -s https://api.nuget.org/v3/index.json -k $ApiKey --skip-duplicate --no-symbols true

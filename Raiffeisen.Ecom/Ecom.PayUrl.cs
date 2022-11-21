@@ -44,6 +44,17 @@ public partial class Ecom
         }
     }
     
+    /// <summary>
+    /// Get payment from URL.
+    /// </summary>
+    /// <param name="payParams">The payment form params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The payment form URL.</returns>
+    public string GeneratePayUrl(Model.Pay.PayParams payParams, string path = UriPaymentForm)
+    {
+        return GeneratePayUrl<>(payParams, path);
+    }
+
     private NameValueCollection ToNameValueCollection(object value)
     {
         Dictionary<string, object?> jsonObject;

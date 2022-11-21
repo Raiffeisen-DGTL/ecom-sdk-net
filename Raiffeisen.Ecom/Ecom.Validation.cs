@@ -12,6 +12,7 @@ public partial class Ecom
     /// </summary>
     /// <param name="json">The notification JSON string.</param>
     /// <param name="hash">The hash.</param>
+    /// <typeparam name="TNotification">The notification type.</typeparam>
     /// <exception cref="EncryptionException">On compute hash fail.</exception>
     /// <exception cref="ValidationException">On validation error.</exception>
     /// <returns>Validation result.</returns>
@@ -22,10 +23,24 @@ public partial class Ecom
     }
     
     /// <summary>
+    /// Validate payment notification or throw.
+    /// </summary>
+    /// <param name="json">The notification JSON string.</param>
+    /// <param name="hash">The hash.</param>
+    /// <exception cref="EncryptionException">On compute hash fail.</exception>
+    /// <exception cref="ValidationException">On validation error.</exception>
+    /// <returns>Validation result.</returns>
+    public void IsValidPaymentNotificationOrThrow(string json, string hash)
+    {
+        IsValidNotificationOrThrow<Model.Notification.PaymentNotification>(json, hash);
+    }
+    
+    /// <summary>
     /// Validate notification or throw.
     /// </summary>
     /// <param name="notification">The notification.</param>
     /// <param name="hash">The hash.</param>
+    /// <typeparam name="TNotification">The notification type.</typeparam>
     /// <exception cref="EncryptionException">On compute hash fail.</exception>
     /// <exception cref="ValidationException">On validation error.</exception>
     /// <returns>Validation result.</returns>
@@ -44,13 +59,26 @@ public partial class Ecom
         ))
             throw new ValidationException(errors);
     }
-    
-    
+
+    /// <summary>
+    /// Validate payment notification or throw.
+    /// </summary>
+    /// <param name="notification">The notification.</param>
+    /// <param name="hash">The hash.</param>
+    /// <exception cref="EncryptionException">On compute hash fail.</exception>
+    /// <exception cref="ValidationException">On validation error.</exception>
+    /// <returns>Validation result.</returns>
+    public void IsValidPaymentNotificationOrThrow(Model.Notification.PaymentNotification notification, string hash)
+    {
+        IsValidNotificationOrThrow(notification, hash);
+    }
+
     /// <summary>
     /// Validate notification.
     /// </summary>
     /// <param name="json">The notification json string.</param>
     /// <param name="hash">The hash.</param>
+    /// <typeparam name="TNotification">The notification type.</typeparam>
     /// <exception cref="SerializationException">On json parsing fail.</exception>
     /// <exception cref="EncryptionException">On compute hash fail.</exception>
     /// <returns>Validation result.</returns>
@@ -59,12 +87,26 @@ public partial class Ecom
     {
         return IsValidNotification(ParseNotification<TNotification>(json), hash);
     }
+
+    /// <summary>
+    /// Validate payment notification.
+    /// </summary>
+    /// <param name="json">The notification json string.</param>
+    /// <param name="hash">The hash.</param>
+    /// <exception cref="SerializationException">On json parsing fail.</exception>
+    /// <exception cref="EncryptionException">On compute hash fail.</exception>
+    /// <returns>Validation result.</returns>
+    public bool IsValidPaymentNotification(string json, string hash)
+    {
+        return IsValidNotification<Model.Notification.PaymentNotification>(json, hash);
+    }
     
     /// <summary>
     /// Validate notification.
     /// </summary>
     /// <param name="notification">The notification data.</param>
     /// <param name="hash">The hash.</param>
+    /// <typeparam name="TNotification">The notification type.</typeparam>
     /// <exception cref="SerializationException">On json parsing fail.</exception>
     /// <exception cref="EncryptionException">On compute hash fail.</exception>
     /// <returns>Validation result.</returns>
@@ -81,6 +123,19 @@ public partial class Ecom
             },
             out _
         );
+    }
+
+    /// <summary>
+    /// Validate payment notification.
+    /// </summary>
+    /// <param name="notification">The notification data.</param>
+    /// <param name="hash">The hash.</param>
+    /// <exception cref="SerializationException">On json parsing fail.</exception>
+    /// <exception cref="EncryptionException">On compute hash fail.</exception>
+    /// <returns>Validation result.</returns>
+    public bool IsValidPaymentNotification(Model.Notification.PaymentNotification notification, string hash)
+    {
+        return IsValidNotification(notification, hash);
     }
     
     private TNotification ParseNotification<TNotification>(string json)

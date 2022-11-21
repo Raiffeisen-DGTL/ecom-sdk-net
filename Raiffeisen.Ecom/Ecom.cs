@@ -16,6 +16,7 @@ public partial class Ecom
     private readonly string _secretKey;
     private readonly string _publicId;
     private readonly string _host;
+    private readonly IFingerprint _fingerprint;
     private readonly IClient _client;
     private readonly IConverter _converter;
     private readonly IValidator _validator;
@@ -44,6 +45,7 @@ public partial class Ecom
         _secretKey = secretKey;
         _publicId = publicId;
         _host = host;
+        _fingerprint = fingerprint;
         _client = client;
         _converter = converter;
         _validator = validator;

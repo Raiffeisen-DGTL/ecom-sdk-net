@@ -19,7 +19,7 @@
         <AssemblyTitle>Raiffeisen ECOM SDK</AssemblyTitle>
         <AssemblyName>Raiffeisen.Ecom</AssemblyName>
         <RootNamespace>Raiffeisen.Ecom</RootNamespace>
-        <PackageId>Raiffeisen.Ecomqiwi</PackageId>
+        <PackageId>Raiffeisen.Ecom</PackageId>
         <PackageTags>raiffeisen ecom sdk</PackageTags>
         <PackageProjectUrl>https://github.com/Raiffeisen-DGTL/ecom-sdk-dotnet</PackageProjectUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>

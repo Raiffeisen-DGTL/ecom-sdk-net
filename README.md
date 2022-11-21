@@ -24,7 +24,7 @@ nuget install Raiffeisen.Ecom
 
 ```csharp
 var ecom = Ecom.Create(
-  secretKey: "***"
+  secretKey: "***",
   publicId: "***"
 );
 ```
@@ -52,7 +52,7 @@ var ecom = Ecom.Create(
 Метод `PostCallbackUrl` устанавливает адресс приема событий.
 
 ```csharp
-ecom.PostCallbackUrl<Model.Callback.CallbackResponse, >(
+ecom.PostCallbackUrl<Model.Callback.CallbackResponse,>(
   new Model.Callback.CallbackRequest
   {
     CallbackUrl = "http://test.ru/"
@@ -68,7 +68,7 @@ ecom.PostCallbackUrl<Model.Callback.CallbackResponse, >(
 ecom.GeneratePayUrl(
   new Model.Pay.PayParams
   {
-    Amount = 9.99M;
+    Amount = 9.99M,
     OrderId = "testOrder",
     SuccessUrl = "http://test.ru/"
   }
@@ -87,9 +87,9 @@ https://e-commerce.raiffeisen.ru/pay/?publicId=***&amount=10&orderId=testOrder&s
 await ecom.PostPay(
   new Raiffeisen.Ecom.Model.Pay.PayRequestReceipt120
   {
-    Amount = 9.99M;
+    Amount = 9.99M,
     OrderId = "testOrder",
-    SuccessUrl = "http://test.ru/"
+    SuccessUrl = "http://test.ru/",
     Receipt = new Model.Receipt120.Receipt120Request
     {
         customer = new Model.Receipt120.Customer,
@@ -104,7 +104,7 @@ await ecom.PostPay(
 Метод `GetOrderTransaction` возвращает информацию о статусе транзакции.
 
 ```csharp
-await ecom.GetOrderTransaction<Model.Transaction.TransactionResponse, >(
+await ecom.GetOrderTransaction(
   new Model.Order.OrderParams
   {
     OrderId = "testOrder"
@@ -124,7 +124,7 @@ new Model.Transaction.TransactionResponse
         OrderId = "testOrder",
         Status = new Model.Transaction.Status
         {
-            Value = Model.Transaction.Value.SUCCESS
+            Value = Model.Transaction.Value.SUCCESS,
             Date = DateTimeOffset.ParseExact('2019-07-11T17:45:13+03:00', Util.DateTimeOffsetConverter.Format)
         },
         PaymentMethod = Model.Transaction.PaymentMethod.Acquiring,
@@ -148,11 +148,11 @@ new Model.Transaction.TransactionResponse
 Метод `PostOrderRefund` создает возврат по заказу.
 
 ```csharp
-await ecom.PostOrderRefund<Model.Refund.RefundResponse, , >(
+await ecom.PostOrderRefund(
   new Model.Refund.RefundParams
   {
     OrderId = "testOrder",
-    RefundId = "testRefund",
+    RefundId = "testRefund"
   },
   new Model.Refund.RefundRequest
   {
@@ -177,7 +177,7 @@ new Model.Refund.RefundResponse
 Метод `GetOrderRefund` возвращает статус возврата.
 
 ```csharp
-await ecom.GetOrderRefund<Model.Refund.RefundStatusResponse, >(
+await ecom.GetOrderRefund(
   new Model.Refund.RefundParams
   {
     OrderId = "testOrder",
@@ -202,7 +202,7 @@ new Model.Refund.RefundStatusResponse
 Метод `GetOrder` возвращает данные о заказе.
 
 ```csharp
-await ecom.GetOrder<Model.Order.OrderResponse, >(
+await ecom.GetOrder(
   new Model.Order.OrderParams
   {
     OrderId = "testOrder"
@@ -245,10 +245,10 @@ await ecom.DeleteOrder(
 
 ### Получение списка чеков
 
-Метод `GetOrderReceipts` возвращает список чеков.
+Методы `GetOrderReceipts105` и `GetOrderReceipts120` возвращают список чеков соответствующей версии.
 
 ```csharp
-await ecom.GetOrderReceipts<Model.Receipt105.Receipt105Response, >(
+await ecom.GetOrderReceipts105(
   new Model.Order.OrderParams
   {
     OrderId = "testOrder"
@@ -300,10 +300,10 @@ new []
 
 ### Получение чека возврата
 
-Метод `GetOrderRefundReceipt` возвращает чек возврата.
+Методы `GetOrderRefundReceipt105` и `GetOrderRefundReceipt120` возвращают чек возврата соответствующей версии.
 
 ```csharp
-await ecom.GetOrderRefundReceipt<Model.Receipt105.Receipt105Response, >(
+await ecom.GetOrderRefundReceipt105(
   new Model.Refund.RefundParams
   {
     OrderId = "testOrder",
@@ -348,12 +348,12 @@ new Model.Receipt105.Receipt105Response
             }
         }
     }
-}
+};
 ```
 
 ### Уведомление о платеже
 
-Метод `IsValidNotification` проверяет подпись уведомления о платеже.
+Метод `IsValidPaymentNotification` проверяет подпись уведомления о платеже.
 
 ```csharp
 var signature = "***";
@@ -380,8 +380,8 @@ var eventBody = @"{
 }";
 
 Asset.isTrue(
-  ecom.IsValidNotification<Model.Notification.PaymentNotification>(json, hash)
-)
+  ecom.IsValidPaymentNotification(json, hash)
+);
 ```
 
 ## Требования

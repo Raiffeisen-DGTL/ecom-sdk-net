@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using System.Threading.Tasks;
 using Raiffeisen.Ecom.Exception;
 
@@ -32,6 +33,17 @@ public partial class Ecom
     }
 
     /// <summary>
+    /// Get payment form page.
+    /// </summary>
+    /// <param name="payParams">The payment form params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The payment form response promise.</returns>
+    public async Task<Model.Response.IRawResponse> GetPay(Model.Pay.PayParams payParams, string path = UriPaymentForm)
+    {
+        return await GetPay<>(payParams, path);
+    }
+
+    /// <summary>
     /// Post payment form page.
     /// </summary>
     /// <param name="payRequest">The payment form params.</param>
@@ -51,13 +63,30 @@ public partial class Ecom
     {
         IsNotAbstract(typeof(TRequest));
         payRequest.PublicId = _publicId;
+        payRequest.Extra = _converter.ReadValue<ExpandoObject>(_converter.WriteValue(payRequest.Extra ?? new object()));
+        payRequest.Extra.apiClient ??= _fingerprint.GetClientName();
+        payRequest.Extra.apiClientVersion ??= _fingerprint.GetClientVersion();
         IsValidOrThrow(payRequest);
-        
+
         return await RequestRaw(
             "POST",
             JoinUriPath(path),
             payRequest
         );
+    }
+
+    /// <summary>
+    /// Post payment form page.
+    /// </summary>
+    /// <param name="payRequest">The payment form params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The payment form response promise.</returns>
+    public async Task<Model.Response.IRawResponse> PostPay(
+        Model.Pay.PayRequest payRequest,
+        string path = UriPaymentForm
+    )
+    {
+        return await PostPay<>(payRequest, path);
     }
 
     /// <summary>
@@ -85,6 +114,20 @@ public partial class Ecom
             "GET",
             JoinUriPath(path + "/orders/" + orderParams.OrderId + "/transaction")
         );
+    }
+
+    /// <summary>
+    /// Getting information about the status of a transaction.
+    /// </summary>
+    /// <param name="orderParams">The order params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order transaction response promise.</returns>
+    public async Task<Model.Transaction.ITransactionResponse> GetOrderTransaction(
+        Model.Order.OrderParams orderParams,
+        string path = UriPayments
+    )
+    {
+        return await GetOrderTransaction<Model.Transaction.TransactionResponse, >(orderParams, path);
     }
 
     /// <summary>
@@ -125,6 +168,25 @@ public partial class Ecom
     }
 
     /// <summary>
+    /// Processing a refund.
+    /// </summary>
+    /// <param name="refundParams">The refund params.</param>
+    /// <param name="refundRequest">The refund data.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order refund response promise.</returns>
+    public async Task<Model.Refund.IRefundResponse> PostOrderRefund(
+        Model.Refund.RefundParams refundParams,
+        Model.Refund.RefundRequest refundRequest,
+        string path = UriPayments
+    )
+    {
+        return await PostOrderRefund<
+            Model.Refund.RefundResponse,
+            Model.Refund.RefundParams,
+        >(refundParams, refundRequest, path);
+    }
+
+    /// <summary>
     /// Getting refund status.
     /// </summary>
     /// <param name="refundParams">The refund params.</param>
@@ -149,6 +211,20 @@ public partial class Ecom
             "GET",
             JoinUriPath(path + "/orders/" + refundParams.OrderId + "/refunds/" + refundParams.RefundId )
         );
+    }
+
+    /// <summary>
+    /// Getting refund status.
+    /// </summary>
+    /// <param name="refundParams">The refund params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order refund response promise.</returns>
+    public async Task<Model.Refund.IRefundStatusResponse> GetOrderRefund(
+        Model.Refund.RefundParams refundParams,
+        string path = UriPayments
+    )
+    {
+        return await GetOrderRefund<Model.Refund.RefundStatusResponse,>(refundParams, path);
     }
 
     /// <summary>
@@ -179,6 +255,20 @@ public partial class Ecom
     }
     
     /// <summary>
+    /// Getting order information.
+    /// </summary>
+    /// <param name="orderParams">The order params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order response promise.</returns>
+    public async Task<Model.Order.IOrderResponse> GetOrder(
+        Model.Order.OrderParams orderParams,
+        string path = UriPayment
+    )
+    {
+        return await GetOrder<Model.Order.OrderResponse, >(orderParams, path);
+    }
+
+    /// <summary>
     /// Delete order.
     /// </summary>
     /// <param name="orderParams">The order params.</param>
@@ -202,6 +292,20 @@ public partial class Ecom
         );
     }
     
+    /// <summary>
+    /// Delete order.
+    /// </summary>
+    /// <param name="orderParams">The order params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order response promise.</returns>
+    public async Task<Model.Response.IRawResponse> DeleteOrder(
+        Model.Order.OrderParams orderParams,
+        string path = UriPayment
+    )
+    {
+        return await DeleteOrder<>(orderParams, path);
+    }
+
     /// <summary>
     /// Getting a list of receipts.
     /// </summary>
@@ -229,6 +333,34 @@ public partial class Ecom
             JoinUriPath(path + "/orders/" + orderParams.OrderId + "/receipts" )
         );
     }
+    
+    /// <summary>
+    /// Getting a list of v1.05 receipts.
+    /// </summary>
+    /// <param name="orderParams">The order params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order receipts list response promise.</returns>
+    public async Task<Model.Receipt105.IReceipt105Response[]> GetOrderReceipts105(
+        Model.Order.OrderParams orderParams,
+        string path = UriFiscal
+    )
+    {
+        return await GetOrderReceipts<Model.Receipt105.Receipt105Response, >(orderParams, path);
+    }
+    
+    /// <summary>
+    /// Getting a list of v1.20 receipts.
+    /// </summary>
+    /// <param name="orderParams">The order params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order receipts list response promise.</returns>
+    public async Task<Model.Receipt120.IReceipt120Response[]> GetOrderReceipts120(
+        Model.Order.OrderParams orderParams,
+        string path = UriFiscal
+    )
+    {
+        return await GetOrderReceipts<Model.Receipt120.Receipt120Response, >(orderParams, path);
+    }
 
     /// <summary>
     /// Getting order refund receipt.
@@ -255,6 +387,34 @@ public partial class Ecom
             "GET",
             JoinUriPath(path + "/orders/" + refundParams.OrderId + "/refunds/" + refundParams.RefundId + "/receipt")
         );
+    }
+
+    /// <summary>
+    /// Getting order refund v1.05 receipt.
+    /// </summary>
+    /// <param name="refundParams">The refund params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order refund receipt response promise.</returns>
+    public async Task<Model.Receipt105.IReceipt105Response> GetOrderRefundReceipt105(
+        Model.Refund.RefundParams refundParams,
+        string path = UriFiscal
+    )
+    {
+        return await GetOrderRefundReceipt<Model.Receipt105.Receipt105Response,>(refundParams, path);
+    }
+    
+    /// <summary>
+    /// Getting order refund v1.20 receipt.
+    /// </summary>
+    /// <param name="refundParams">The refund params.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The order refund receipt response promise.</returns>
+    public async Task<Model.Receipt120.IReceipt120Response> GetOrderRefundReceipt120(
+        Model.Refund.RefundParams refundParams,
+        string path = UriFiscal
+    )
+    {
+        return await GetOrderRefundReceipt<Model.Receipt120.Receipt120Response,>(refundParams, path);
     }
 
     /// <summary>
@@ -287,6 +447,20 @@ public partial class Ecom
             JoinUriPath(path + "/callback"),
             request
         );
+    }
+
+    /// <summary>
+    /// Setup callback URL.
+    /// </summary>
+    /// <param name="request">The request model.</param>
+    /// <param name="path">The default path.</param>
+    /// <returns>The response data promise.</returns>
+    public async Task<Model.Callback.ICallbackResponse> PostCallbackUrl(
+        Model.Callback.CallbackRequest request,
+        string path = UriSettings
+    )
+    {
+        return await PostCallbackUrl<Model.Callback.CallbackResponse,>(request, path);
     }
 
     private string JoinUriPath(string path)

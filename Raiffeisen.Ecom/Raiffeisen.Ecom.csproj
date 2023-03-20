@@ -3,10 +3,10 @@
     <PropertyGroup>
         <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
         <LangVersion>latest</LangVersion>
-        <AssemblyVersion>0.1.2.0</AssemblyVersion>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
         <FileVersion>0.1.0</FileVersion>
         <VersionPrefix>0.1.0</VersionPrefix>
-        <PackageVersion>0.1.2</PackageVersion>
+        <PackageVersion>0.1.0</PackageVersion>
         <VersionSuffix>release</VersionSuffix>
         <Authors>Yaraslav &lt;yaroslav@wannabe.pro&gt;</Authors>
         <Company>Raiffeisen JSC</Company>

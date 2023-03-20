@@ -99,6 +99,82 @@ await ecom.PostPay(
 );
 ```
 
+Метод `GetPayJs` вернет JavaScript для отображения платежной формы в браузере.
+Данный метод подходит для передачи чеков.
+
+```csharp
+ecom.GetPayJs(
+  new Raiffeisen.Ecom.Model.Pay.PayRequestReceipt105
+  {
+    Amount = 10M,
+    OrderId = "testOrder",
+    Receipt = new Model.Receipt105.Receipt105Request
+    {
+        Items = new [
+            new Model.Receipt105.Item
+            {
+                Name = "Тестовый товар",
+                Price = 10M,
+                Quantity = 1M,
+                PaymentObject = Model.Receipt105.PaymentObject.Commodity,
+                PaymentMode = Model.Receipt105.PaymentMode.FullPrepayment,
+                Amount = 10M,
+                VatType = Model.Receipt105.VatType.Vat20
+            }
+        ]
+    }
+  }
+);
+```
+
+Вывод:
+
+```js
+(({
+    publicId,
+    formData,
+    url = 'https://e-commerce.raiffeisen.ru/pay',
+    method = 'openPopup',
+    sdk = 'PaymentPageSdk',
+    src = 'https://pay.raif.ru/pay/sdk/v2/payment.styled.min.js',
+}) => new Promise((resolve, reject) => {
+    const openPopup = () => {
+        new this[sdk](publicId, {url})[method](formData).then(resolve).catch(reject);
+    };
+    if (!this.hasOwnProperty(sdk)) {
+        const script = this.document.createElement('script');
+        script.src = src;
+        script.onload = openPopup;
+        script.onerror = reject;
+        this.document.head.appendChild(script);
+    } else openPopup();
+}))({
+    "publicId": "***",
+    "url": "https://e-commerce.raiffeisen.ru/pay",
+    "formData": {
+        "orderId": "testOrder",
+        "amount": 10,
+        "receipt": {
+            "items": [
+                {
+                    "name": "Тестовый товар",
+                    "price": 10,
+                    "quantity": 1,
+                    "paymentObject": "COMMODITY",
+                    "paymentMode": "FULL_PAYMENT",
+                    "amount": 10,
+                    "vatType": "VAT20"
+                }
+            ]
+        }
+    }
+})
+```
+
+Данный JS можно встроить на страницу непосредственно с помощью тега SCRIPT или использовать как Promise в собственных сценариях.
+
+
+
 ### Получение информации о статусе транзакции
 
 Метод `GetOrderTransaction` возвращает информацию о статусе транзакции.

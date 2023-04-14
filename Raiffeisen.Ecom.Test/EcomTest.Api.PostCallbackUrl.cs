@@ -42,7 +42,7 @@ public partial class EcomTest
             )
         );
         
-        ecom.PostCallbackUrl<Model.Callback.CallbackResponse, >(
+        ecom.PostCallbackUrl<Model.Callback.CallbackResponse, Model.Callback.CallbackRequest>(
             new Model.Callback.CallbackRequest
             {
                 CallbackUrl = "http://test.ru/"

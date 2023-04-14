@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Dynamic;
 using System.Web;
 using Raiffeisen.Ecom.Exception;
-using Raiffeisen.Ecom.Model.Pay;
 
 namespace Raiffeisen.Ecom;
 
@@ -55,7 +54,7 @@ public partial class Ecom
         payRequest.Extra.apiClientVersion ??= _fingerprint.GetClientVersion();
         IsValidOrThrow(payRequest);
         
-        var jsRequest = new JsRequest<TRequest>
+        var jsRequest = new Model.Pay.JsRequest<TRequest>
         {
             PublicId = _publicId,
             Url = JoinUriPath(path),
@@ -109,7 +108,7 @@ public partial class Ecom
     /// <returns>The payment form URL.</returns>
     public string GeneratePayUrl(Model.Pay.PayParams payParams, string path = UriPaymentForm)
     {
-        return GeneratePayUrl<>(payParams, path);
+        return GeneratePayUrl<Model.Pay.PayParams>(payParams, path);
     }
 
     private NameValueCollection ToNameValueCollection(object value)

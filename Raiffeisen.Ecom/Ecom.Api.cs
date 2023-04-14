@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
 using Raiffeisen.Ecom.Exception;
@@ -40,7 +41,7 @@ public partial class Ecom
     /// <returns>The payment form response promise.</returns>
     public async Task<Model.Response.IRawResponse> GetPay(Model.Pay.PayParams payParams, string path = UriPaymentForm)
     {
-        return await GetPay<>(payParams, path);
+        return await GetPay<Model.Pay.PayParams>(payParams, path);
     }
 
     /// <summary>
@@ -63,9 +64,10 @@ public partial class Ecom
     {
         IsNotAbstract(typeof(TRequest));
         payRequest.PublicId = _publicId;
-        payRequest.Extra = _converter.ReadValue<ExpandoObject>(_converter.WriteValue(payRequest.Extra ?? new object()));
-        payRequest.Extra.apiClient ??= _fingerprint.GetClientName();
-        payRequest.Extra.apiClientVersion ??= _fingerprint.GetClientVersion();
+        ExpandoObject extra = _converter.ReadValue<ExpandoObject>(_converter.WriteValue(payRequest.Extra ?? new object()));
+        extra.TryAdd("apiClient", _fingerprint.GetClientName());
+        extra.TryAdd("apiClientVersion", _fingerprint.GetClientVersion());
+        payRequest.Extra = extra;
         IsValidOrThrow(payRequest);
 
         return await RequestRaw(
@@ -86,7 +88,7 @@ public partial class Ecom
         string path = UriPaymentForm
     )
     {
-        return await PostPay<>(payRequest, path);
+        return await PostPay<Model.Pay.PayRequest>(payRequest, path);
     }
 
     /// <summary>
@@ -127,7 +129,10 @@ public partial class Ecom
         string path = UriPayments
     )
     {
-        return await GetOrderTransaction<Model.Transaction.TransactionResponse, >(orderParams, path);
+        return await GetOrderTransaction<
+            Model.Transaction.TransactionResponse,
+            Model.Order.OrderParams
+        >(orderParams, path);
     }
 
     /// <summary>
@@ -183,6 +188,7 @@ public partial class Ecom
         return await PostOrderRefund<
             Model.Refund.RefundResponse,
             Model.Refund.RefundParams,
+            Model.Refund.RefundRequest
         >(refundParams, refundRequest, path);
     }
 
@@ -224,7 +230,7 @@ public partial class Ecom
         string path = UriPayments
     )
     {
-        return await GetOrderRefund<Model.Refund.RefundStatusResponse,>(refundParams, path);
+        return await GetOrderRefund<Model.Refund.RefundStatusResponse, Model.Refund.RefundParams>(refundParams, path);
     }
 
     /// <summary>
@@ -265,7 +271,7 @@ public partial class Ecom
         string path = UriPayment
     )
     {
-        return await GetOrder<Model.Order.OrderResponse, >(orderParams, path);
+        return await GetOrder<Model.Order.OrderResponse, Model.Order.OrderParams>(orderParams, path);
     }
 
     /// <summary>
@@ -303,7 +309,7 @@ public partial class Ecom
         string path = UriPayment
     )
     {
-        return await DeleteOrder<>(orderParams, path);
+        return await DeleteOrder<Model.Order.OrderParams>(orderParams, path);
     }
 
     /// <summary>
@@ -345,7 +351,7 @@ public partial class Ecom
         string path = UriFiscal
     )
     {
-        return await GetOrderReceipts<Model.Receipt105.Receipt105Response, >(orderParams, path);
+        return await GetOrderReceipts<Model.Receipt105.Receipt105Response, Model.Order.OrderParams>(orderParams, path);
     }
     
     /// <summary>
@@ -359,7 +365,7 @@ public partial class Ecom
         string path = UriFiscal
     )
     {
-        return await GetOrderReceipts<Model.Receipt120.Receipt120Response, >(orderParams, path);
+        return await GetOrderReceipts<Model.Receipt120.Receipt120Response, Model.Order.OrderParams>(orderParams, path);
     }
 
     /// <summary>
@@ -400,7 +406,10 @@ public partial class Ecom
         string path = UriFiscal
     )
     {
-        return await GetOrderRefundReceipt<Model.Receipt105.Receipt105Response,>(refundParams, path);
+        return await GetOrderRefundReceipt<
+            Model.Receipt105.Receipt105Response,
+            Model.Refund.RefundParams
+        >(refundParams, path);
     }
     
     /// <summary>
@@ -414,7 +423,10 @@ public partial class Ecom
         string path = UriFiscal
     )
     {
-        return await GetOrderRefundReceipt<Model.Receipt120.Receipt120Response,>(refundParams, path);
+        return await GetOrderRefundReceipt<
+            Model.Receipt120.Receipt120Response,
+            Model.Refund.RefundParams
+        >(refundParams, path);
     }
 
     /// <summary>
@@ -460,7 +472,10 @@ public partial class Ecom
         string path = UriSettings
     )
     {
-        return await PostCallbackUrl<Model.Callback.CallbackResponse,>(request, path);
+        return await PostCallbackUrl<
+            Model.Callback.CallbackResponse,
+            Model.Callback.CallbackRequest
+        >(request, path);
     }
 
     private string JoinUriPath(string path)

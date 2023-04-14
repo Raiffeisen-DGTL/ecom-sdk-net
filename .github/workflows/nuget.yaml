@@ -15,4 +15,4 @@ jobs:
             3.1.x
             6.0.x
       - run: dotnet build -c Release ecom-dotnet-sdk.sln
-      - run: dotnet nuget push ./Raiffeisen.Ecom/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET }} --skip-duplicate --no-symbols true
+      - run: dotnet nuget push ./Raiffeisen.Ecom/bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET }} --skip-duplicate
